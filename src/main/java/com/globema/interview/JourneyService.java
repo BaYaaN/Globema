@@ -35,7 +35,7 @@ public class JourneyService {
         String[] previousAndCurrentCity = new String[2];
         previousAndCurrentCity[1] = firstCity;
 
-        StringBuilder stringBuilder = new StringBuilder(firstCity);
+        StringBuilder sb = new StringBuilder(firstCity);
 
         do {
             String previousCity = previousAndCurrentCity[PREVIOUS_CITY_INDEX];
@@ -46,10 +46,10 @@ public class JourneyService {
             previousAndCurrentCity[PREVIOUS_CITY_INDEX] = currentCity;
             previousAndCurrentCity[CURRENT_CITY_INDEX] = nextCity;
 
-            stringBuilder.append(DASH).append(nextCity);
+            sb.append(DASH).append(nextCity);
         } while (!previousAndCurrentCity[CURRENT_CITY_INDEX].equals(lastCity));
 
-        out.print(stringBuilder.toString());
+        out.print(sb.toString());
 
         LOGGER.log(FINE, "Finnish printing");
     }

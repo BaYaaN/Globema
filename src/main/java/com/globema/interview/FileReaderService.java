@@ -1,13 +1,15 @@
 package com.globema.interview;
 
+import lombok.NonNull;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static java.nio.file.Files.lines;
 import static java.nio.file.Paths.get;
 import static java.util.logging.Level.FINE;
@@ -18,18 +20,18 @@ public class FileReaderService {
     private static final String DASH = "-";
     private static final Logger LOGGER = Logger.getLogger(FileReaderService.class.getName());
 
-    public Map<String, List<String>> findCitiesWithPossibleRoutes(final String filePath) {
+    public Map<String, List<String>> findCitiesWithPossibleRoutes(@NonNull final String filePath) {
         LOGGER.log(FINE, "Start processing with path {}", filePath);
 
-        final Map<String, List<String>> citiesWithPossibleRoutes = new HashMap<>();
+        final Map<String, List<String>> citiesWithPossibleRoutes = newHashMap();
 
         try (Stream<String> stream = lines(get(filePath))) {
             stream
                     .skip(1)
                     .forEach(line -> {
                         final String[] split = line.split(DASH);
-                        citiesWithPossibleRoutes.computeIfAbsent(split[0], empList -> new ArrayList<>()).add(split[1]);
-                        citiesWithPossibleRoutes.computeIfAbsent(split[1], empList -> new ArrayList<>()).add(split[0]);
+                        citiesWithPossibleRoutes.computeIfAbsent(split[0], empList -> newArrayList()).add(split[1]);
+                        citiesWithPossibleRoutes.computeIfAbsent(split[1], empList -> newArrayList()).add(split[0]);
                     });
         } catch (IOException e) {
             LOGGER.log(SEVERE, "Can not read from file with path {0}", filePath);

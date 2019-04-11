@@ -1,13 +1,17 @@
 package com.globema.interview;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
+import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.joining;
 
@@ -17,10 +21,13 @@ public class JourneyService {
     private static final String DASH = "-";
     private static final Logger LOGGER = Logger.getLogger(JourneyService.class.getName());
 
+    private final Function<Collection<String>, Boolean> hasLessThen2Elements = list -> list == null || list.size() < 2;
+    private final Function<Collection<String>, String> findLast = list -> getLast(list);
+
     private final FileReaderService fileReaderService;
     private final PrintStream out;
 
-    public void printJourney(final String filePath) {
+    public void printJourney(@NonNull final String filePath) {
         LOGGER.log(FINE, "Start printing stops from path {}", filePath);
 
         out.print(findStops(filePath)
@@ -35,16 +42,15 @@ public class JourneyService {
         final String firstCity = edgeCities[0];
         final String lastCity = edgeCities[1];
 
-        final List<String> cities = new ArrayList<>();
-        cities.add(firstCity);
+        final List<String> cities = newArrayList(firstCity);
 
         do {
             final String cityBefore = findOneBeforeLast(cities);
-            final String currentCity = findLast(cities);
+            final String currentCity = findLast.apply(cities);
             final List<String> possibleRoutes = citiesWithPossibleRoutes.get(currentCity);
             final String nextCity = possibleRoutes.stream().filter(x -> !x.equals(cityBefore)).findFirst().get();
             cities.add(nextCity);
-        } while (!findLast(cities).equals(lastCity));
+        } while (!findLast.apply(cities).equals(lastCity));
 
         return cities;
     }
@@ -58,16 +64,8 @@ public class JourneyService {
                 .toArray(size -> new String[size]);
     }
 
-    private String findLast(final List<String> collection) {
-        if (collection == null || collection.size() == 0) {
-            return null;
-        }
-
-        return collection.get(collection.size() - 1);
-    }
-
     private String findOneBeforeLast(final List<String> collection) {
-        if (collection == null || collection.size() < 2) {
+        if (hasLessThen2Elements.apply(collection)) {
             return null;
         }
 

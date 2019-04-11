@@ -29,16 +29,16 @@ public class FileReaderService {
             stream
                     .skip(1)
                     .forEach(line -> {
-                        String[] split = line.split(DASH);
-                        citiesWithPossibleRoutes.computeIfAbsent(split[0], empList -> newArrayList()).add(split[1]);
-                        citiesWithPossibleRoutes.computeIfAbsent(split[1], empList -> newArrayList()).add(split[0]);
+                        String[] cities = line.split(DASH);
+                        citiesWithPossibleRoutes.computeIfAbsent(cities[0], empList -> newArrayList()).add(cities[1]);
+                        citiesWithPossibleRoutes.computeIfAbsent(cities[1], empList -> newArrayList()).add(cities[0]);
                     });
         } catch (IOException e) {
             LOGGER.log(SEVERE, "Can not read from file with path {0}", filePath);
             throw new RuntimeException("Something went wrong during file processing", e);
         }
 
-        LOGGER.log(FINE, "Successful read file from path {}. Amount of cities: {}", filePath);
+        LOGGER.log(FINE, "Successful read file from path {}", filePath);
 
         return citiesWithPossibleRoutes;
     }

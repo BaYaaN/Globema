@@ -1,0 +1,11 @@
+5
+Krosno-Rzeszów
+Chełm-Zamość
+Krosno-Przemyśl
+Puławy-Radom
+Zamość-Przemyśl
+Rzeszów-Tarnów
+Kielce-Sandomierz
+Kielce-Tarnów
+Chełm-Lublin
+Puławy-Sandomierz

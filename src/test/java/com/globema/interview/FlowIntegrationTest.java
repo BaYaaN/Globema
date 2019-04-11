@@ -17,7 +17,7 @@ public class FlowIntegrationTest {
     @Test
     public void shouldPrintProperStopsForJourney() throws URISyntaxException {
         //given
-        final String path = Paths.get(getClass().getClassLoader().getResource("trasy.txt").toURI()).toString();
+        final String path = Paths.get(getClass().getClassLoader().getResource("routes/route.txt").toURI()).toString();
 
         //when
         journeyService.printJourney(path);
@@ -30,7 +30,7 @@ public class FlowIntegrationTest {
     @Test
     public void shouldPrintProperStopsForLongerJourney() throws URISyntaxException {
         //given
-        final String path = Paths.get(getClass().getClassLoader().getResource("trasy1.txt").toURI()).toString();
+        final String path = Paths.get(getClass().getClassLoader().getResource("routes/longerRoute.txt").toURI()).toString();
 
         //when
         journeyService.printJourney(path);

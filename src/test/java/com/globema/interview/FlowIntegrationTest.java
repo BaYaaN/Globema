@@ -11,14 +11,13 @@ import static org.mockito.Mockito.verify;
 
 public class FlowIntegrationTest {
 
-
     private final PrintStream printStream = mock(PrintStream.class);
-    JourneyService journeyService = new JourneyService(new FileReaderService(), printStream);
+    private final JourneyService journeyService = new JourneyService(new FileReaderService(), printStream);
 
     @Test
-    public void test() throws URISyntaxException {
+    public void shouldPrintProperStopsForJourney() throws URISyntaxException {
         //given
-        String path = Paths.get(getClass().getClassLoader().getResource("trasy.txt").toURI()).toString();
+        final String path = Paths.get(getClass().getClassLoader().getResource("trasy.txt").toURI()).toString();
 
         //when
         journeyService.printJourney(path);
@@ -29,9 +28,9 @@ public class FlowIntegrationTest {
 
 
     @Test
-    public void test1() throws URISyntaxException {
+    public void shouldPrintProperStopsForLongerJourney() throws URISyntaxException {
         //given
-        String path = Paths.get(getClass().getClassLoader().getResource("trasy1.txt").toURI()).toString();
+        final String path = Paths.get(getClass().getClassLoader().getResource("trasy1.txt").toURI()).toString();
 
         //when
         journeyService.printJourney(path);

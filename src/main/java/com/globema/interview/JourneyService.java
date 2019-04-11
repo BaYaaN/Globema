@@ -6,19 +6,23 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.joining;
 
 @AllArgsConstructor
 public class JourneyService {
 
     private static final String DASH = "-";
+    private static final Logger LOGGER = Logger.getLogger(JourneyService.class.getName());
 
     private final FileReaderService fileReaderService;
     private final PrintStream out;
 
-
     public void printJourney(final String filePath) {
+        LOGGER.log(FINE, "Start printing stops from path {}", filePath);
+
         out.print(findStops(filePath)
                 .stream()
                 .collect(joining(DASH)));

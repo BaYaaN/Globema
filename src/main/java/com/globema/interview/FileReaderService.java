@@ -5,16 +5,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static java.nio.file.Files.lines;
 import static java.nio.file.Paths.get;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 public class FileReaderService {
 
-    //TODO: add logging
     private static final String DASH = "-";
+    private static final Logger LOGGER = Logger.getLogger(FileReaderService.class.getName());
 
     public Map<String, List<String>> findCitiesWithPossibleRoutes(final String filePath) {
+        LOGGER.log(FINE, "Start processing with path {}", filePath);
+
         final Map<String, List<String>> citiesWithPossibleRoutes = new HashMap<>();
 
         try {
@@ -26,8 +31,11 @@ public class FileReaderService {
                         citiesWithPossibleRoutes.computeIfAbsent(split[1], empList -> new ArrayList<>()).add(split[0]);
                     });
         } catch (IOException e) {
+            LOGGER.log(SEVERE, "Can not read from file with path {0}", filePath);
             throw new RuntimeException("Something went wrong during file proccessing", e);
         }
+
+        LOGGER.log(FINE, "Successful read file from path {}. Amount of cities: {}", filePath);
 
         return citiesWithPossibleRoutes;
     }

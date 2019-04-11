@@ -15,6 +15,10 @@ public class JourneyService {
 
     private static final String DASH = "-";
     private static final Logger LOGGER = Logger.getLogger(JourneyService.class.getName());
+    private static final int PREVIOUS_CITY_INDEX = 0;
+    private static final int CURRENT_CITY_INDEX = 1;
+    private static final int FIRST_CITY_INDEX = 0;
+    private static final int LAST_CITY_INDEX = 1;
 
     private final FileReaderService fileReaderService;
     private final PrintStream out;
@@ -25,8 +29,8 @@ public class JourneyService {
         Map<String, List<String>> citiesWithPreviousAndNextStops = fileReaderService.findCitiesWithPreviousAndNextStop(filePath);
 
         String[] edgeCities = findEdgeCities(citiesWithPreviousAndNextStops);
-        String firstCity = edgeCities[0];
-        String lastCity = edgeCities[1];
+        String firstCity = edgeCities[FIRST_CITY_INDEX];
+        String lastCity = edgeCities[LAST_CITY_INDEX];
 
         String[] previousAndCurrentCity = new String[2];
         previousAndCurrentCity[1] = firstCity;
@@ -34,16 +38,16 @@ public class JourneyService {
         StringBuilder stringBuilder = new StringBuilder(firstCity);
 
         do {
-            String previousCity = previousAndCurrentCity[0];
-            String currentCity = previousAndCurrentCity[1];
+            String previousCity = previousAndCurrentCity[PREVIOUS_CITY_INDEX];
+            String currentCity = previousAndCurrentCity[CURRENT_CITY_INDEX];
             List<String> possibleCities = citiesWithPreviousAndNextStops.get(currentCity);
             String nextCity = findNextCity(possibleCities, previousCity);
 
-            previousAndCurrentCity[0] = currentCity;
-            previousAndCurrentCity[1] = nextCity;
+            previousAndCurrentCity[PREVIOUS_CITY_INDEX] = currentCity;
+            previousAndCurrentCity[CURRENT_CITY_INDEX] = nextCity;
 
             stringBuilder.append(DASH).append(nextCity);
-        } while (!previousAndCurrentCity[1].equals(lastCity));
+        } while (!previousAndCurrentCity[CURRENT_CITY_INDEX].equals(lastCity));
 
         out.print(stringBuilder.toString());
 

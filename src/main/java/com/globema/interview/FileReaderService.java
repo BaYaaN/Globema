@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import static java.nio.file.Files.lines;
 import static java.nio.file.Paths.get;
@@ -22,8 +23,8 @@ public class FileReaderService {
 
         final Map<String, List<String>> citiesWithPossibleRoutes = new HashMap<>();
 
-        try {
-            lines(get(filePath))
+        try (Stream<String> stream = lines(get(filePath))) {
+            stream
                     .skip(1)
                     .forEach(line -> {
                         final String[] split = line.split(DASH);
@@ -32,7 +33,7 @@ public class FileReaderService {
                     });
         } catch (IOException e) {
             LOGGER.log(SEVERE, "Can not read from file with path {0}", filePath);
-            throw new RuntimeException("Something went wrong during file proccessing", e);
+            throw new RuntimeException("Something went wrong during file processing", e);
         }
 
         LOGGER.log(FINE, "Successful read file from path {}. Amount of cities: {}", filePath);

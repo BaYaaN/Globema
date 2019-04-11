@@ -18,7 +18,7 @@ public class FlowIntegrationTest {
     @SneakyThrows
     public void shouldPrintProperStopsForJourney() {
         //given
-        final String path = Paths.get(getClass().getClassLoader().getResource("routes/route.txt").toURI()).toString();
+        String path = Paths.get(getClass().getClassLoader().getResource("routes/route.txt").toURI()).toString();
 
         //when
         journeyService.printJourney(path);
@@ -32,7 +32,7 @@ public class FlowIntegrationTest {
     @SneakyThrows
     public void shouldPrintProperStopsForLongerJourney() {
         //given
-        final String path = Paths.get(getClass().getClassLoader().getResource("routes/longerRoute.txt").toURI()).toString();
+        String path = Paths.get(getClass().getClassLoader().getResource("routes/longerRoute.txt").toURI()).toString();
 
         //when
         journeyService.printJourney(path);

@@ -4,16 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import java.io.PrintStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
-import static com.google.common.collect.Iterables.getLast;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.logging.Level.FINE;
-import static java.util.stream.Collectors.joining;
 
 @AllArgsConstructor
 public class JourneyService {
@@ -21,38 +16,36 @@ public class JourneyService {
     private static final String DASH = "-";
     private static final Logger LOGGER = Logger.getLogger(JourneyService.class.getName());
 
-    private final Function<Collection<String>, Boolean> hasLessThen2Elements = list -> list == null || list.size() < 2;
-    private final Function<Collection<String>, String> findLast = list -> getLast(list);
-
     private final FileReaderService fileReaderService;
     private final PrintStream out;
 
     public void printJourney(@NonNull final String filePath) {
         LOGGER.log(FINE, "Start printing stops from path {}", filePath);
 
-        out.print(findStops(filePath)
-                .stream()
-                .collect(joining(DASH)));
-    }
+        Map<String, List<String>> citiesWithPreviousAndNextStops = fileReaderService.findCitiesWithPreviousAndNextStop(filePath);
 
-    private List<String> findStops(final String filePath) {
-        final Map<String, List<String>> citiesWithPossibleRoutes = fileReaderService.findCitiesWithPossibleRoutes(filePath);
+        String[] edgeCities = findEdgeCities(citiesWithPreviousAndNextStops);
+        String firstCity = edgeCities[0];
+        String lastCity = edgeCities[1];
 
-        final String[] edgeCities = findEdgeCities(citiesWithPossibleRoutes);
-        final String firstCity = edgeCities[0];
-        final String lastCity = edgeCities[1];
+        String[] previousAndCurrentCity = new String[2];
+        previousAndCurrentCity[1] = firstCity;
 
-        final List<String> cities = newArrayList(firstCity);
+        StringBuilder stringBuilder = new StringBuilder(firstCity);
 
         do {
-            final String cityBefore = findOneBeforeLast(cities);
-            final String currentCity = findLast.apply(cities);
-            final List<String> possibleCities = citiesWithPossibleRoutes.get(currentCity);
-            final String nextCity = possibleCities.stream().filter(x -> !x.equals(cityBefore)).findFirst().get();
-            cities.add(nextCity);
-        } while (!findLast.apply(cities).equals(lastCity));
+            String cityBefore = previousAndCurrentCity[0];
+            String currentCity = previousAndCurrentCity[1];
+            List<String> possibleCities = citiesWithPreviousAndNextStops.get(currentCity);
+            String nextCity = possibleCities.stream().filter(x -> !x.equals(cityBefore)).findFirst().get();
 
-        return cities;
+            previousAndCurrentCity[0] = currentCity;
+            previousAndCurrentCity[1] = nextCity;
+
+            stringBuilder.append(DASH).append(nextCity);
+        } while (!previousAndCurrentCity[1].equals(lastCity));
+
+        out.print(stringBuilder.toString());
     }
 
     private String[] findEdgeCities(final Map<String, List<String>> citiesWithPossibleRoutes) {
@@ -62,13 +55,5 @@ public class JourneyService {
                 .filter(x -> x.getValue().size() == 1)
                 .map(x -> x.getKey())
                 .toArray(size -> new String[size]);
-    }
-
-    private String findOneBeforeLast(final List<String> collection) {
-        if (hasLessThen2Elements.apply(collection)) {
-            return null;
-        }
-
-        return collection.get(collection.size() - 2);
     }
 }

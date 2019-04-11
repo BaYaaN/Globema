@@ -20,16 +20,16 @@ public class FileReaderService {
     private static final String DASH = "-";
     private static final Logger LOGGER = Logger.getLogger(FileReaderService.class.getName());
 
-    public Map<String, List<String>> findCitiesWithPossibleRoutes(@NonNull final String filePath) {
+    public Map<String, List<String>> findCitiesWithPreviousAndNextStop(@NonNull final String filePath) {
         LOGGER.log(FINE, "Start processing with path {}", filePath);
 
-        final Map<String, List<String>> citiesWithPossibleRoutes = newHashMap();
+        Map<String, List<String>> citiesWithPossibleRoutes = newHashMap();
 
         try (Stream<String> stream = lines(get(filePath))) {
             stream
                     .skip(1)
                     .forEach(line -> {
-                        final String[] split = line.split(DASH);
+                        String[] split = line.split(DASH);
                         citiesWithPossibleRoutes.computeIfAbsent(split[0], empList -> newArrayList()).add(split[1]);
                         citiesWithPossibleRoutes.computeIfAbsent(split[1], empList -> newArrayList()).add(split[0]);
                     });

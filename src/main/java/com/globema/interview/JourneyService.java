@@ -47,8 +47,8 @@ public class JourneyService {
         do {
             final String cityBefore = findOneBeforeLast(cities);
             final String currentCity = findLast.apply(cities);
-            final List<String> possibleRoutes = citiesWithPossibleRoutes.get(currentCity);
-            final String nextCity = possibleRoutes.stream().filter(x -> !x.equals(cityBefore)).findFirst().get();
+            final List<String> possibleCities = citiesWithPossibleRoutes.get(currentCity);
+            final String nextCity = possibleCities.stream().filter(x -> !x.equals(cityBefore)).findFirst().get();
             cities.add(nextCity);
         } while (!findLast.apply(cities).equals(lastCity));
 

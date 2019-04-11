@@ -1,9 +1,9 @@
 package com.globema.interview;
 
+import lombok.SneakyThrows;
 import org.junit.Test;
 
 import java.io.PrintStream;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 import static org.mockito.Mockito.mock;
@@ -15,7 +15,8 @@ public class FlowIntegrationTest {
     private final JourneyService journeyService = new JourneyService(new FileReaderService(), printStream);
 
     @Test
-    public void shouldPrintProperStopsForJourney() throws URISyntaxException {
+    @SneakyThrows
+    public void shouldPrintProperStopsForJourney() {
         //given
         final String path = Paths.get(getClass().getClassLoader().getResource("routes/route.txt").toURI()).toString();
 
@@ -28,7 +29,8 @@ public class FlowIntegrationTest {
 
 
     @Test
-    public void shouldPrintProperStopsForLongerJourney() throws URISyntaxException {
+    @SneakyThrows
+    public void shouldPrintProperStopsForLongerJourney() {
         //given
         final String path = Paths.get(getClass().getClassLoader().getResource("routes/longerRoute.txt").toURI()).toString();
 

@@ -1,5 +1,7 @@
 package com.globema.interview;
 
+import lombok.AllArgsConstructor;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 
+@AllArgsConstructor
 public class JourneyService {
 
     private static final String DASH = "-";
@@ -14,10 +17,6 @@ public class JourneyService {
     private final FileReaderService fileReaderService;
     private final PrintStream out;
 
-    public JourneyService(FileReaderService fileReaderService, PrintStream out) {
-        this.fileReaderService = fileReaderService;
-        this.out = out;
-    }
 
     public void printJourney(final String filePath) {
         out.print(findStops(filePath)

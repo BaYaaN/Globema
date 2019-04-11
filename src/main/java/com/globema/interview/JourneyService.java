@@ -54,8 +54,8 @@ public class JourneyService {
         LOGGER.log(FINE, "Finnish printing");
     }
 
-    private String[] findEdgeCities(final Map<String, List<String>> citiesWithPossibleRoutes) {
-        return citiesWithPossibleRoutes
+    private String[] findEdgeCities(final Map<String, List<String>> citiesWithPreviousAndNextStops) {
+        return citiesWithPreviousAndNextStops
                 .entrySet()
                 .stream()
                 .filter(x -> x.getValue().size() == 1)

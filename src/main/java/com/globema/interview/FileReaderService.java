@@ -23,15 +23,15 @@ public class FileReaderService {
     public Map<String, List<String>> findCitiesWithPreviousAndNextStop(@NonNull final String filePath) {
         LOGGER.log(FINE, "Start processing with path {}", filePath);
 
-        Map<String, List<String>> citiesWithPossibleRoutes = newHashMap();
+        Map<String, List<String>> citiesWithPreviousAndNextStops = newHashMap();
 
         try (Stream<String> stream = lines(get(filePath))) {
             stream
                     .skip(1)
                     .forEach(line -> {
                         String[] cities = line.split(DASH);
-                        citiesWithPossibleRoutes.computeIfAbsent(cities[0], empList -> newArrayList()).add(cities[1]);
-                        citiesWithPossibleRoutes.computeIfAbsent(cities[1], empList -> newArrayList()).add(cities[0]);
+                        citiesWithPreviousAndNextStops.computeIfAbsent(cities[0], empList -> newArrayList()).add(cities[1]);
+                        citiesWithPreviousAndNextStops.computeIfAbsent(cities[1], empList -> newArrayList()).add(cities[0]);
                     });
         } catch (IOException e) {
             LOGGER.log(SEVERE, "Can not read from file with path {0}", filePath);
@@ -40,6 +40,6 @@ public class FileReaderService {
 
         LOGGER.log(FINE, "Successful read file from path {}", filePath);
 
-        return citiesWithPossibleRoutes;
+        return citiesWithPreviousAndNextStops;
     }
 }
